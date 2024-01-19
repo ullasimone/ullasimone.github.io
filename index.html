@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>GraphQL</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <!-- partial:index.partial.html -->
+    <section>
+      <div class="signin">
+        <div class="content">
+          <h2>Sign In</h2>
+          <div class="form">
+            <div class="inputBox">
+              <input type="text" id="username" required /> <i>Username/email</i>
+            </div>
+            <div class="inputBox">
+              <input type="password" id="password" required /> <i>Password</i>
+            </div>
+            <div class="inputBox">
+              <input type="submit" value="Login" onclick="login()" />
+            </div>
+            <!-- Add an error message element -->
+            <div id="errorMessage" style="color: red"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      function login() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        // Create a Basic authentication token using base64 encoding
+        const token = btoa(`${username}:${password}`);
+
+        // Perform the POST request to the server using fetch API
+        fetch("https://01.kood.tech/api/auth/signin", {
+          method: "POST",
+          headers: {
+            Authorization: `Basic ${token}`, // Set the Basic authentication header
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            // Assuming the server returns a JWT token, you can store it in a secure way (e.g., localStorage)
+            const jwtToken = data;
+            console.log("JWT Token:", jwtToken);
+            localStorage.setItem("jwtToken", jwtToken);
+            // Call the function to perform the GraphQL query with Bearer authentication
+            performGraphQLQuery(jwtToken);
+
+            // Redirect the user to the result page after successful login
+            window.location.href = "main.html";
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            // Handle login errors, e.g., show an error message to the user
+            const errorMessage =
+              "Invalid username or password. Please try again.";
+            displayErrorMessage(errorMessage);
+          });
+      }
+      function displayErrorMessage(message) {
+        // Get the error message element
+        const errorMessageElement = document.getElementById("errorMessage");
+
+        // Set the error message
+        errorMessageElement.textContent = message;
+      }
+      function performGraphQLQuery(jwtToken) {
+        const graphqlEndpoint =
+          "https://01.kood.tech/api/graphql-engine/v1/graphql"; // Replace with your GraphQL API endpoint
+
+        const query = `
+        {
+  user {
+    id
+  }
+}
+`;
+        console.log("jwt Token inside ql query", jwtToken);
+        // Perform the GraphQL query with Bearer authentication
+        fetch(graphqlEndpoint, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${jwtToken}`, // Set the Bearer authentication header
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ query }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("GraphQL Response:", data);
+            // Process the GraphQL response here
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            // Handle GraphQL query errors here
+          });
+      }
+    </script>
+  </body>
+</html>

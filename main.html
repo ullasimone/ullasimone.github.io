@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <meta charset="UTF-8" />
+  <title>GraphQL</title>
+  <link rel="stylesheet" href="./style.css" />
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <section>
+    <div class="user">
+      <div class="content">
+        <h2 id="userLogin"></h2>
+        <br />
+        <h3 id="userLevel"></h3>
+        <h3 id="totalXp"></h3>
+        <br />
+        <h3 id="auditRatio"></h3>
+        <br />
+        <button id="logoutButton">Logout</button>
+      </div>
+    </div>
+
+    <div class="chart-container">
+      <svg id="xpChart"></svg>
+    </div>
+    <script type="module" src="./js/xpChart.js"></script>
+
+    <div class="radar-chart-container">
+      <canvas id="radarCanvas"></canvas>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <br>
+      <div ><p id="allSkills"></p></div>
+    </div>
+    <script type="module" src="./js/radarChart.js"></script>
+
+    <div class="transactions">
+      <h2 id="projectsXp">Projects</h2>
+
+      <div class="transcontent">
+        <pre id="transactionProjects"></pre>
+      </div>
+      <br />
+      <h2 id="exercisesXp">Exercises</h2>
+
+      <div class="transcontent">
+        <pre id="transactionExercises"></pre>
+      </div>
+    </div>
+  </section>
+</body>
+
+</html>
